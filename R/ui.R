@@ -5,6 +5,7 @@
 #' @param DATA_CENTER string, your Qualtrics data center
 #' @param SURVEY_ID string, your Qualtrics survey ID
 #' @param API_TOKEN string, your Qualtrics API token
+#' @param blockids character vector, ids of text blocks, new blocks will be created if left empty
 #'
 #' @return A character vector of block ids. It is necessary for later steps.
 #' @export
@@ -19,12 +20,14 @@
 #'           "SV_S3A96bzOnfyKMEDCiKhw",
 #'           "ZAhIjt6CkPO5FyczlRhJ")
 #' }
-add_texts <- function(x, tags, DATA_CENTER, SURVEY_ID, API_TOKEN){
-  blockids <- create_blocks(x = x,
-                            tags = tags,
-                            DATA_CENTER = DATA_CENTER,
-                            SURVEY_ID = SURVEY_ID,
-                            API_TOKEN = API_TOKEN)
+add_texts <- function(x, tags, DATA_CENTER, SURVEY_ID, API_TOKEN, blockids = NULL){
+  if(is.null(blockids)){
+    blockids <- create_blocks(ndoc = length(x),
+                              tags = tags,
+                              DATA_CENTER = DATA_CENTER,
+                              SURVEY_ID = SURVEY_ID,
+                              API_TOKEN = API_TOKEN)
+  }
   for(i in seq_along(blockids)){
     add_text(block_id = blockids[i],
              text = x[i],
@@ -151,4 +154,32 @@ create_block_randomizer <- function(blockids,
     encode = "json"
   )
   check_status(response)
+}
+
+#' Title
+#'
+#' @param DATA_CENTER string, your Qualtrics data center
+#' @param SURVEY_ID string, your Qualtrics survey ID
+#' @param API_TOKEN string, your Qualtrics API token
+#'
+#' @return json, survey setup
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_survey(             "fra1",
+#'                         "SV_S3A96bzOnfyKMEDCiKhw",
+#'                         "ZAhIjt6CkPO5FyczlRhJ")
+#' }
+get_survey <- function(DATA_CENTER,SURVEY_ID,API_TOKEN){
+  response <- httr::GET(
+    paste0("https://",DATA_CENTER,".qualtrics.com/API/v3/survey-definitions/",SURVEY_ID),
+    httr::add_headers(
+      "X-API-TOKEN" = API_TOKEN,
+      "Content-Type" = "application/json"
+    )
+  )
+  res <-get_content(response)
+  result <- res$result
+  result
 }

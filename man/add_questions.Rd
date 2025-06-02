@@ -49,7 +49,7 @@ answers <- c("nasty","dirty","comfortable")
 add_questions(blockids,
               question,
               answers,
-              "Annotation",
+              tags,
               "fra1",
               "SV_S3A96bzOnfyKMEDCiKhw",
               "ZAhIjt6CkPO5FyczlRhJ")

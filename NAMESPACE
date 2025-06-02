@@ -3,6 +3,7 @@
 export(add_questions)
 export(add_texts)
 export(create_block_randomizer)
+export(get_survey)
 export(setup_prolific)
 importFrom(httr,GET)
 importFrom(httr,POST)

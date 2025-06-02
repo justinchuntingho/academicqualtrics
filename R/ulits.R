@@ -56,9 +56,7 @@ create_block <- function(tag, DATA_CENTER, SURVEY_ID, API_TOKEN) {
   block_id
 }
 
-create_blocks <- function(x, tags = NULL, DATA_CENTER, SURVEY_ID, API_TOKEN){
-  ndoc <- length(x)
-
+create_blocks <- function(ndoc, tags = NULL, DATA_CENTER, SURVEY_ID, API_TOKEN){
   if(is.null(tags)){
     tags <- stringi::stri_rand_strings(ndoc,10)
   }
@@ -139,6 +137,30 @@ add_text <- function(block_id, text, tag, DATA_CENTER, SURVEY_ID, API_TOKEN){
   question_id
 }
 
+add_text <- function(block_id, text, tag, DATA_CENTER, SURVEY_ID, API_TOKEN){
+  payload_list <- list(
+    QuestionText = text,
+    DataExportTag = paste0(tag,"_Article"),
+    QuestionType = "DB",
+    Selector = "TB",
+    Configuration = list(
+      QuestionDescriptionOption = "UseText"
+    )
+  )
+  payload <- jsonlite::toJSON(payload_list, auto_unbox = TRUE)
+  response <- httr::POST(
+    paste0("https://",DATA_CENTER,".qualtrics.com/API/v3/survey-definitions/",SURVEY_ID, "/questions?blockId=", block_id),
+    httr::add_headers(.headers = gen_header(API_TOKEN)),
+    body = payload,
+    encode = "json"
+  )
+
+  content_response <- get_content(response)
+  question_id <- content_response$result$QuestionID
+  cat(paste0("Successfully added text: ", block_id, " ", question_id, "\n"))
+  question_id
+}
+
 get_blocks <- function(DATA_CENTER,SURVEY_ID,API_TOKEN){
   response <- httr::GET(
     paste0("https://",DATA_CENTER,".qualtrics.com/API/v3/survey-definitions/",SURVEY_ID),
@@ -178,16 +200,5 @@ get_options <- function(DATA_CENTER,SURVEY_ID,API_TOKEN){
   result
 }
 
-get_survey <- function(DATA_CENTER,SURVEY_ID,API_TOKEN){
-  response <- httr::GET(
-    paste0("https://",DATA_CENTER,".qualtrics.com/API/v3/survey-definitions/",SURVEY_ID),
-    httr::add_headers(
-      "X-API-TOKEN" = API_TOKEN,
-      "Content-Type" = "application/json"
-    )
-  )
-  res <-get_content(response)
-  result <- res$result
-  result
-}
+
 

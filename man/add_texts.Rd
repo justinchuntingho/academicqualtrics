@@ -4,7 +4,7 @@
 \alias{add_texts}
 \title{Create Text Blocks for Annotation}
 \usage{
-add_texts(x, tags, DATA_CENTER, SURVEY_ID, API_TOKEN)
+add_texts(x, tags, DATA_CENTER, SURVEY_ID, API_TOKEN, blockids = NULL)
 }
 \arguments{
 \item{x}{character vector, texts to be annotated}
@@ -16,6 +16,8 @@ add_texts(x, tags, DATA_CENTER, SURVEY_ID, API_TOKEN)
 \item{SURVEY_ID}{string, your Qualtrics survey ID}
 
 \item{API_TOKEN}{string, your Qualtrics API token}
+
+\item{blockids}{character vector, ids of text blocks, new blocks will be created if left empty}
 }
 \value{
 A character vector of block ids. It is necessary for later steps.
