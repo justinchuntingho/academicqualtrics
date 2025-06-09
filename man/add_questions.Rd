@@ -14,7 +14,8 @@ add_questions(
   API_TOKEN,
   selector = "SAVR",
   subselector = "TX",
-  forced = "ON"
+  forced = "ON",
+  texts = NULL
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ add_questions(
 \item{subselector}{string, additional options or variations for response collection, one of: "GR", "TX", "TXOT", "WOTXB", "WTXB"}
 
 \item{forced}{string, force respondents to answer a question, one of: "ON", "OFF"}
+
+\item{texts}{character vector, texts to be appended before each question}
 }
 \description{
 Add Questions to Text Blocks

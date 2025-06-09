@@ -52,6 +52,7 @@ add_texts <- function(x, tags, DATA_CENTER, SURVEY_ID, API_TOKEN, blockids = NUL
 #' @param selector string, the format used for collecting responses, one of: "DL", "GRB", "MACOL", "MAHR", "MAVR", "MSB", "NPS", "SACOL", "SAHR", "SAVR", "SB", "TB", "TXOT", "PTB"
 #' @param subselector string, additional options or variations for response collection, one of: "GR", "TX", "TXOT", "WOTXB", "WTXB"
 #' @param forced string, force respondents to answer a question, one of: "ON", "OFF"
+#' @param texts character vector, texts to be appended before each question
 #'
 #'
 #' @return NULL
@@ -71,10 +72,15 @@ add_texts <- function(x, tags, DATA_CENTER, SURVEY_ID, API_TOKEN, blockids = NUL
 #'               "ZAhIjt6CkPO5FyczlRhJ")
 #' }
 add_questions <- function(blockids, question, answers, tags, DATA_CENTER, SURVEY_ID, API_TOKEN,
-                          selector = "SAVR", subselector = "TX", forced = "ON"){
+                          selector = "SAVR", subselector = "TX", forced = "ON", texts = NULL){
+  if(!is.null(texts)){
+    q_text <-paste(texts, question, sep = "<br><br>")
+  } else {
+    q_text <- rep(question, length(blockids))
+  }
   for(i in seq_along(blockids)){
     add_question(block_id = blockids[i],
-                 question = question,
+                 question = q_text[i],
                  answers = answers,
                  tag = tags[i],
                  DATA_CENTER = DATA_CENTER,
